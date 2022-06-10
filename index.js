@@ -4,6 +4,7 @@ const By = webdriver.By
 const until = webdriver.until
 const logger = require('./logger');
 
+
 const {Console} = require('console');
 const fs = require('fs');
 
@@ -26,7 +27,7 @@ async function linkedinWorker(){
             await driver.wait(until.elementLocated(By.id('password')), 5000).sendKeys('robertrobertic');
             await driver.wait(until.elementLocated(By.xpath('//*[@id="organic-div"]/form/div[3]/button')),5000).click();
         } catch(error) {
-            logger.error('Linkedin loggin : ', error);
+           logger.error('Linkedin login :', error);
         } 
         
         // ME + VIEW PROFILE
@@ -42,7 +43,7 @@ async function linkedinWorker(){
             await driver.wait(until.elementLocated(By.xpath('/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[6]/div[2]/div/div[2]/div[1]/div[1]/div[1]/div/ul/li[1]')), 5000).click();
 
         } catch(error){
-            logger.error('Me + view profile :', error);
+            logger.error('Me + View profile :', error);
         }
         
         // FORMA ZA DODAVANJE POSLA
@@ -68,7 +69,7 @@ async function linkedinWorker(){
             await driver.sleep(1000);
             await driver.wait(until.elementLocated(By.xpath('/html/body/div[3]/div/div/div[3]/div/button')),5000).click();
         } catch(error){
-            logger.error('Forma :', error);
+            logger.error('Forma za poslove :', error);
         }
 
         //ADDING JOBS
@@ -96,7 +97,7 @@ async function linkedinWorker(){
                    console.log('Added data');
             });
         } catch(error){
-            logger.error('Adding jobs :', error);
+            logger.error('Poslovi :', error);
         }
             
             // logging jobs to .txtLog
@@ -128,7 +129,7 @@ async function linkedinWorker(){
             await driver.sleep(1000);
             await driver.wait(until.elementLocated(By.className('msg-form__send-button')),5000).click();
         } catch(error) {
-            logger.error('Messaging', error);
+            logger.error('Poruke :', error);
         }
    // await driver.quit();
 }
