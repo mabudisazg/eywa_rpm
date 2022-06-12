@@ -21,17 +21,20 @@ async function linkedinWorker(){
 
             // LINKEDIN LOGIN
         try{
+            
             await driver.get('https://www.linkedin.com')
             await driver.findElement(By.xpath('/html/body/nav/div/a[2]')).click();
             await driver.wait(until.elementLocated(By.id('username')), 5000).sendKeys('mabudisa@vsite.hr');
             await driver.wait(until.elementLocated(By.id('password')), 5000).sendKeys('robertrobertic');
             await driver.wait(until.elementLocated(By.xpath('//*[@id="organic-div"]/form/div[3]/button')),5000).click();
-        } catch(error) {
-           logger.error('Linkedin login :', error);
+            logger.info('Logiranje na LinkedIn.');
+        } catch(error) {   
+            logger.error('Linkedin login :', error)
         } 
-        
-        // ME + VIEW PROFILE
+
+        // ME + VIEW PROFILE SEKCIJA
         try {
+            
             await driver.wait(until.elementLocated(By.xpath('/html/body/div[7]/header/div/nav/ul/li[6]/div/button')), 15000).click(); // stavljeno 15 sekundi zbog captche
             await driver.sleep(1000);
             //viewProfile.sendKeys(webdriver.Key.TAB);
@@ -41,10 +44,11 @@ async function linkedinWorker(){
             await driver.sleep(1000);
             await driver.wait(until.elementLocated(By.xpath('/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[6]/div[2]/div/div[2]/div[1]/div[1]/button')), 5000).click();
             await driver.wait(until.elementLocated(By.xpath('/html/body/div[7]/div[3]/div/div/div[2]/div/div/main/section[6]/div[2]/div/div[2]/div[1]/div[1]/div[1]/div/ul/li[1]')), 5000).click();
+            logger.info('Otvaranje sekcije View Profile.')
 
         } catch(error){
-            logger.error('Me + View profile :', error);
-        }
+            logger.error('Otvaranje View Profile :', error);
+        }   
         
         // FORMA ZA DODAVANJE POSLA
         try{
@@ -68,11 +72,13 @@ async function linkedinWorker(){
             //zatvaranje modal windowa od forme
             await driver.sleep(1000);
             await driver.wait(until.elementLocated(By.xpath('/html/body/div[3]/div/div/div[3]/div/button')),5000).click();
+            logger.info('Uspjesno ispunjena forma za dodavanje poslova.')
+
         } catch(error){
-            logger.error('Forma za poslove :', error);
+            logger.error('Forma za poslove nije ispunjena:', error);
         }
 
-        //ADDING JOBS
+        //PRETRAŽIVANJE POSLOVA I DODAVANJE REZULTATA PRETRAGE U DATOTEKU
         try{
             await driver.wait(until.elementLocated(By.xpath('/html/body/div[7]/header/div/nav/ul/li[3]/a')), 5000).click();
 
@@ -92,12 +98,14 @@ async function linkedinWorker(){
             
             const postedJobs = await driver.wait(until.elementLocated(By.xpath('/html/body/div[7]/div[3]/div[3]/div[2]/div/section[1]/div/div/ul')), 5000).getText();
         
+            //zapisivanje rezultata pretrage u datoteku
             fs.writeFile('data.json', JSON.stringify(postedJobs), (err) => {
                    if(err) throw err;
-                   console.log('Added data');
             });
+            logger.info('Dodani rezultati pretrage poslova u datoteku data.json.')
+
         } catch(error){
-            logger.error('Poslovi :', error);
+            logger.error('Pretraživanje poslova nije uspjesno :', error);
         }
             
             // logging jobs to .txtLog
@@ -111,9 +119,9 @@ async function linkedinWorker(){
             //sleep da kopira sve poslove
         await driver.sleep(1000);
 
-        //MESSAGING
+        //PRETRAŽIVANJE KONTAKTA I SLANJE PORUKE
         try{
-            //Edge case, slanje poruke je uspjeno samo ako vec nije ostvarena komunikacija sa korisnikom
+            //Edge case, slanje poruke je uspjesno samo ako vec nije ostvarena komunikacija sa korisnikom
             //treba provjeriti sta ako je kontakt vec otvoren ??
 
             await driver.wait(until.elementLocated(By.xpath('/html/body/div[7]/header/div/nav/ul/li[4]/a')), 5000).click();
@@ -128,8 +136,10 @@ async function linkedinWorker(){
             //sleep dok se send gumb ne enabla
             await driver.sleep(1000);
             await driver.wait(until.elementLocated(By.className('msg-form__send-button')),5000).click();
+            logger.info('Kontakt pronađen te poruka poslana.')
+
         } catch(error) {
-            logger.error('Poruke :', error);
+            logger.error('Neuspješno slanje poruke kontaktu :', error);
         }
    // await driver.quit();
 }
